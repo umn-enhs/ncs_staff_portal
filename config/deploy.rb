@@ -67,6 +67,7 @@ namespace :deploy do
     desc "#{t} task is a no-op with mod_rails"
     task t, :roles => :app do ; end
   end
+  
   desc "Fix permissions"
   task :permissions do
     sudo "chmod -R g+w #{shared_path} #{current_path} #{release_path}"
@@ -76,11 +77,11 @@ end
 # backup the database before migrating
 # before 'deploy:migrate', 'db:backup'
 
-# after deploying, generate static pages, copy over uploads and results, cleanup old deploys, aggressively set permissions
-after 'deploy:update_code', 'deploy:cleanup', 'deploy:permissions'
+# after deploying, generate static pages, copy over uploads and results, cleanup old deploys
+after 'deploy:update_code', 'deploy:cleanup'
 
-# after deploying symlink , copy images to current image config location.
-after 'deploy:symlink', 'config:images'
+# after deploying symlink, aggressively set permissions, copy images to current image config location.
+after 'deploy:symlink', 'deploy:permissions', 'config:images'
 
 # Database
 namespace :db do

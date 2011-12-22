@@ -27,6 +27,7 @@
 #  ncs_active_date    :date
 #  ncs_inactive_date  :date
 #  staff_id           :string(36)      not null
+#  external           :boolean         default(FALSE), not null
 #
 
 require 'spec_helper'
@@ -128,6 +129,15 @@ describe Staff do
   end
 
   describe "validates" do
+    
+    describe "email" do
+      it "should not be unique" do
+        FactoryGirl.create(:staff, :email => "test@email.com")
+        staff = FactoryGirl.create(:valid_staff, :email => "test@email.com")
+        staff.should be_valid
+        staff.should_not have(1).error_on(:email)
+      end
+    end
 
     describe "staff_type" do
       let(:staff_type_code) { Factory(:ncs_code, :list_name => "STUDY_STAFF_TYPE_CL1", :display_text => "Other", :local_code => -5) }
@@ -175,6 +185,14 @@ describe Staff do
         staff = FactoryGirl.build(:staff, :race => Factory(:ncs_code, :list_name => "RACE_CL1", :display_text => "White", :local_code => 1))
         staff.race_other = ''
         staff.should be_valid
+        staff.race_other.should == nil
+      end
+      
+      it "should be valid if staff race is 'Native Hawaiian or Other Pacific Islander' and race_other value is nil" do
+        staff = FactoryGirl.build(:staff, :race => Factory(:ncs_code, :list_name => "RACE_CL1", :display_text => "Native Hawaiian or Other Pacific Islander", :local_code => 1))
+        staff.race_other = ''
+        staff.should be_valid
+        staff.should_not have(1).error_on(:race_other)
         staff.race_other.should == nil
       end
     end

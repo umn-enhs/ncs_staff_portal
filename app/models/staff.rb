@@ -27,6 +27,7 @@
 #  ncs_active_date    :date
 #  ncs_inactive_date  :date
 #  staff_id           :string(36)      not null
+#  external           :boolean         default(FALSE), not null
 #
 
 class Staff < ActiveRecord::Base
@@ -37,12 +38,12 @@ class Staff < ActiveRecord::Base
   validates_presence_of :staff_type, :birth_date, :gender, :race, :ethnicity, :zipcode, :subcontractor, :experience, :pay_type, :if => :update_presence_required?, :on => :update
   validates_uniqueness_of :username
   validates_date :birth_date, :before => Date.today, :after=> Date.today - 100.year , :allow_nil => true
-  validates :email, :presence => true, :uniqueness => true, :format => {:with =>/^([^@\s]+)@((?:[-a-z0-9]+.)+[a-z]{2,})$/i }, :if => :create_presence_required?
+  validates :email, :presence => true, :format => {:with =>/^([^@\s]+)@((?:[-a-z0-9]+.)+[a-z]{2,})$/i }, :if => :create_presence_required?
   validates_with OtherEntryValidator, :entry => :staff_type, :other_entry => :staff_type_other
   validates_with OtherEntryValidator, :entry => :race, :other_entry => :race_other
   validates_date :ncs_inactive_date, :allow_blank => true
   validate :pay_amount_required, :if => :update_presence_required?, :on => :update
-
+  validates :staff_id, :presence => true, :uniqueness => { :message => "ID is already taken. Please choose different Staff ID." }
   has_many :staff_languages, :dependent => :destroy
   has_many :staff_cert_trainings, :dependent => :destroy
   has_many :staff_weekly_expenses, :dependent => :destroy

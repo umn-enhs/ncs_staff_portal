@@ -117,7 +117,10 @@ optional.
 
     # for any futher development, developer's email address for development testing email
     development_email = "user@example.com"
-
+    
+    # weekly email reminder can be enable or disable for the particular deployment.
+    email_reminder = false
+    
     # Comma separated list of username for excluding users from weekly email reminder users list
     reminder_excluded_users = "jane,warren"
 
@@ -213,17 +216,6 @@ Initialize the code lists from the MDES using [ncs_mdes][]:
 
 [ncs_mdes]: https://github.com/NUBIC/ncs_mdes
 
-#### Staff
-
-Load all users as empty staff records:
-
-    $ bundle exec rake users:load_to_portal
-
-This creates staff records for the users specified in
-`/etc/nubic/ncs/staff_portal_users.yml`. A sample file is included in this repository as [example_staff_portal_users][]
-
-[example_staff_portal_users]: https://github.com/umn-enhs/ncs_staff_portal/blob/master/example_staff_portal_users.yml
-
 #### Secondary sampling units
 
 Load SSUs:
@@ -241,4 +233,4 @@ Load giveaway items:
 
 This will load all the giveaway items for the outreach activities in
 the Staff Portal. The file must be a single column CSV file with all
-items listed in the column `NAME`.
+items listed in the column `NAME`. This is not the mandatory task though because MDES doesn't require any giveaway items data and it is not being submitted to VDR.
